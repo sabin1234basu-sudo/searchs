@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>地図検索アプリ</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+    margin: 0;
+    text-align: center;
+}
+
+header {
+    background: #2196F3;
+    color: white;
+    padding: 15px;
+}
+
+.container {
+    background: white;
+    width: 85%;
+    margin: 30px auto;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+input {
+    width: 60%;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    margin: 5px;
+    cursor: pointer;
+    background: #2196F3;
+    color: white;
+}
+
+button:hover {
+    background: #1976D2;
+}
+
+iframe {
+    width: 100%;
+    height: 400px;
+    border-radius: 10px;
+    margin-top: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>📍 地図検索アプリ</h1>
+</header>
+
+<div class="container">
+
+    <p>住所を入力して地図を検索してください</p>
+
+    <input type="text" id="address" placeholder="例: Kyoto Station">
+    
+    <br>
+
+    <button onclick="showMap()">検索</button>
+    <button onclick="showCurrentLocation()">現在地</button>
+
+    <iframe id="map"></iframe>
+
+</div>
+
+<script>
+// Show map by address
+function showMap() {
+    const address = document.getElementById("address").value;
+
+    if (address.trim() === "") {
+        alert("住所を入力してください");
+        return;
+    }
+
+    const map = document.getElementById("map");
+    map.src = "https://www.google.com/maps?q=" + encodeURIComponent(address) + "&output=embed";
+}
+
+// Enter key support
+document.getElementById("address").addEventListener("keypress", function(e){
+    if(e.key === "Enter"){
+        showMap();
+    }
+});
+
+// Get current location
+function showCurrentLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            const map = document.getElementById("map");
+            map.src = `https://www.google.com/maps?q=${lat},${lon}&output=embed`;
+        });
+    } else {
+        alert("位置情報が使えません");
+    }
+}
+</script>
+
+</body>
+</html>
